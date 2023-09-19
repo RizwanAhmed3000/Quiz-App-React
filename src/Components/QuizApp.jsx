@@ -98,32 +98,54 @@ function QuizApp() {
     ]
 
     const [quiz, setQuiz] = useState()
+    const [quizDetailBox, setQuizDetailBox] = useState(false)
+    // console.log(quiz);
 
     function quizSelectionHandler(quizData) {
-        // console.log("function working");
-        console.log(quizData ,"quiz data");
         setQuiz(quizData)
     }
 
     return (
         <div className='mainContainer'>
             <div style={{ width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <WelcomePage quizSelectionHandler={quizSelectionHandler} htmlQuizData={htmlQuizData} cssQuizData={cssQuizData} jsQuizData={jsQuizData} />
+                <WelcomePage quizSelectionHandler={quizSelectionHandler} htmlQuizData={htmlQuizData} cssQuizData={cssQuizData} jsQuizData={jsQuizData} setQuizDetailBox={setQuizDetailBox} />
+                {
+                    quizDetailBox && <QuizDetailModal></QuizDetailModal>
+                }
             </div>
         </div>
     )
 }
 
-function WelcomePage({ quizSelectionHandler, htmlQuizData, cssQuizData, jsQuizData }) {
-    // console.log(htmlQuizData, "html quiz");
-    // console.log(cssQuizData, "css quiz");
-    // console.log(jsQuizData, "js quiz");
+// --------------------------------------xxxxxxxxxxxxxxxxxxx----------------------------------//
+
+
+// ---------------------------------------Welcome page----------------------------------------//
+
+function WelcomePage({ quizSelectionHandler, htmlQuizData, cssQuizData, jsQuizData, setQuizDetailBox }) {
     return (
         <div className='welcomeContainer'>
             <h1 style={{ margin: "50px 0px", fontSize: "3rem" }}>Welcome to the Mern Stack Quiz</h1>
-            <button className='html' onClick={() => quizSelectionHandler(htmlQuizData)} >HTML</button>
-            <button className='css' onClick={() => quizSelectionHandler(cssQuizData)} >CSS</button>
-            <button className='js' onClick={() => quizSelectionHandler(jsQuizData)} >JAVASCRIPT</button>
+            <button className='html' onClick={() => {
+                quizSelectionHandler(htmlQuizData)
+                setQuizDetailBox(true)
+            }} >HTML</button>
+            <button className='css' onClick={() => {
+                quizSelectionHandler(cssQuizData)
+                setQuizDetailBox(true)
+            }} >CSS</button>
+            <button className='js' onClick={() => {
+                quizSelectionHandler(jsQuizData)
+                setQuizDetailBox(true)
+            }} >JAVASCRIPT</button>
+        </div>
+    )
+}
+
+function QuizDetailModal() {
+    return (
+        <div className='modalBox'>
+            
         </div>
     )
 }

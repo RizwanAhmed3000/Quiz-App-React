@@ -62,3 +62,12 @@
 .js:hover {
     box-shadow: 0px 0px 10px #ffee00;
 }
+
+/* --------------------------- quiz detail modal ---------------------------------------- */
+
+.modalBox{
+    border: 1px solid red;
+    position: absolute;
+    width: 80%;
+    height: 500px;
+}
