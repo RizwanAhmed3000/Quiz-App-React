@@ -6,6 +6,9 @@ function QuizApp() {
 
     const htmlQuizData = [
         {
+            name: "HTML"
+        },
+        {
             question: "What does HTML stand for?",
             option1: "HyperText Markup Language",
             option2: "HighText Markup Language",
@@ -36,6 +39,9 @@ function QuizApp() {
     ]
 
     const cssQuizData = [
+        {
+            name: "CSS"
+        },
         {
             question: "What is CSS?",
             option1: "CSS is a style sheet language",
@@ -68,6 +74,9 @@ function QuizApp() {
 
     const jsQuizData = [
         {
+            name: "Javascript"
+        },
+        {
             question: "What is javascript?",
             option1: "programing language",
             option2: "Scripting language",
@@ -99,7 +108,7 @@ function QuizApp() {
 
     const [quiz, setQuiz] = useState()
     const [quizDetailBox, setQuizDetailBox] = useState(false)
-    // console.log(quiz);
+    console.log(quiz);
 
     function quizSelectionHandler(quizData) {
         setQuiz(quizData)
@@ -110,7 +119,9 @@ function QuizApp() {
             <div style={{ width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <WelcomePage quizSelectionHandler={quizSelectionHandler} htmlQuizData={htmlQuizData} cssQuizData={cssQuizData} jsQuizData={jsQuizData} setQuizDetailBox={setQuizDetailBox} />
                 {
-                    quizDetailBox && <QuizDetailModal></QuizDetailModal>
+                    quizDetailBox && <QuizDetailModal setQuizDetailBox={setQuizDetailBox} quiz={quiz}>
+
+                    </QuizDetailModal>
                 }
             </div>
         </div>
@@ -142,10 +153,21 @@ function WelcomePage({ quizSelectionHandler, htmlQuizData, cssQuizData, jsQuizDa
     )
 }
 
-function QuizDetailModal() {
+function QuizDetailModal({ setQuizDetailBox, quiz }) {
+    console.log(quiz, "from modal")
     return (
         <div className='modalBox'>
-            
+            <div className='modalContainer' style={{ backgroundColor: "#F26457"}}>
+                <h1 style={{ margin: "50px 0px", fontSize: "3rem" }}>Welcome to {quiz[0].name} quiz</h1>
+                <h2>Number of Questions: {quiz.length - 1}</h2>
+                <h2>Passing percentage: 70%</h2>
+                <div style={{ width: "80%", display: "flex", justifyContent: "space-around", margin: "30px 0px", padding: "10px"}}>
+                    <button className='btns'>Start Quiz</button>
+                    <button className='btns' onClick={()=> {
+                        setQuizDetailBox(false)
+                    }}>Back</button>
+                </div>
+            </div>
         </div>
     )
 }

@@ -28,7 +28,8 @@
 
 .html,
 .css,
-.js {
+.js,
+.btns {
     min-width: 50%;
     margin: 10px 0px;
     padding: 10px;
@@ -65,9 +66,33 @@
 
 /* --------------------------- quiz detail modal ---------------------------------------- */
 
-.modalBox{
-    border: 1px solid red;
+.modalBox {
     position: absolute;
     width: 80%;
     height: 500px;
+    border-radius: 10px;
+}
+
+.modalContainer {
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    color: white;
+    width: 100%;
+    padding: 10px;
+}
+
+.btns {
+    min-width: 45%;
+    background-color: transparent;
+    border: none;
+    color: white;
+    transition: all 250ms ease;
+}
+
+.btns:hover {
+    background-color:  #0d0d0d;
+    color: white;
 }
