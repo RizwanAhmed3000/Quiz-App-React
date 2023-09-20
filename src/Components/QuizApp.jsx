@@ -227,6 +227,15 @@ function QuizMain({ quiz, backgroundColorHandler }) {
                 </div>
                 <div>
                     <h2>Q: {quiz[index].question}</h2>
+                    {
+                        Array.from([quiz[index].option1, quiz[index].option2, quiz[index].option3], (option)=> (
+                            <ul>
+                                <li>
+                                    {option}
+                                </li>
+                            </ul>
+                        ))
+                    }
                     <button className='btns' onClick={() => incrementHandler()}>next</button>
                 </div>
             </div>
