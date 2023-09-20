@@ -2,6 +2,8 @@ import React from 'react'
 import { useState } from 'react';
 import "./QuizApp.css";
 
+// ---------------------------------------Main Conponent----------------------------------------//
+
 function QuizApp() {
 
     const htmlQuizData = [
@@ -108,7 +110,7 @@ function QuizApp() {
 
     const [quiz, setQuiz] = useState()
     const [quizDetailBox, setQuizDetailBox] = useState(false)
-    console.log(quiz);
+    // console.log(quiz);
 
     function quizSelectionHandler(quizData) {
         setQuiz(quizData)
@@ -119,9 +121,9 @@ function QuizApp() {
             <div style={{ width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <WelcomePage quizSelectionHandler={quizSelectionHandler} htmlQuizData={htmlQuizData} cssQuizData={cssQuizData} jsQuizData={jsQuizData} setQuizDetailBox={setQuizDetailBox} />
                 {
-                    quizDetailBox && <QuizDetailModal setQuizDetailBox={setQuizDetailBox} quiz={quiz}>
-
-                    </QuizDetailModal>
+                    quizDetailBox && <QuizModal>
+                        <QuizDetail setQuizDetailBox={setQuizDetailBox} quiz={quiz} />
+                    </QuizModal>
                 }
             </div>
         </div>
@@ -153,20 +155,27 @@ function WelcomePage({ quizSelectionHandler, htmlQuizData, cssQuizData, jsQuizDa
     )
 }
 
-function QuizDetailModal({ setQuizDetailBox, quiz }) {
-    console.log(quiz, "from modal")
+// ---------------------------------------quiz detail modal----------------------------------------//
+
+function QuizModal({ children }) {
     return (
         <div className='modalBox'>
-            <div className='modalContainer' style={{ backgroundColor: "#F26457"}}>
-                <h1 style={{ margin: "50px 0px", fontSize: "3rem" }}>Welcome to {quiz[0].name} quiz</h1>
-                <h2>Number of Questions: {quiz.length - 1}</h2>
-                <h2>Passing percentage: 70%</h2>
-                <div style={{ width: "80%", display: "flex", justifyContent: "space-around", margin: "30px 0px", padding: "10px"}}>
-                    <button className='btns'>Start Quiz</button>
-                    <button className='btns' onClick={()=> {
-                        setQuizDetailBox(false)
-                    }}>Back</button>
-                </div>
+            {children}
+        </div>
+    )
+}
+
+function QuizDetail({ setQuizDetailBox, quiz }) {
+    return (
+        <div className='modalContainer' style={{ backgroundColor: "#F26457" }}>
+            <h1 style={{ margin: "50px 0px", fontSize: "3rem" }}>Welcome to {quiz[0].name} quiz</h1>
+            <h2>Number of Questions: {quiz.length - 1}</h2>
+            <h2>Passing percentage: 70%</h2>
+            <div style={{ width: "80%", display: "flex", justifyContent: "space-around", margin: "30px 0px", padding: "10px" }}>
+                <button className='btns'>Start Quiz</button>
+                <button className='btns' onClick={() => {
+                    setQuizDetailBox(false)
+                }}>Back</button>
             </div>
         </div>
     )
