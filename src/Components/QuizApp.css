@@ -49,7 +49,7 @@
 }
 
 .js {
-    background-color: #F2E857;
+    background-color: #ece032;
 }
 
 .html:hover {
@@ -95,4 +95,10 @@
 .btns:hover {
     background-color:  #0d0d0d;
     color: white;
+}
+
+.quizContainer{
+    background-color: #ffee00;
+    width: 90%;
+    padding: 30px;
 }

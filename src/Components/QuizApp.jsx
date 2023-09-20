@@ -110,22 +110,42 @@ function QuizApp() {
 
     const [quiz, setQuiz] = useState()
     const [quizDetailBox, setQuizDetailBox] = useState(false)
+    const [isQuizStart, setIsQuizStart] = useState(false)
     // console.log(quiz);
 
     function quizSelectionHandler(quizData) {
         setQuiz(quizData)
     }
 
+    function backgroundColorHandler(quiz) {
+        if (quiz[0].name == "HTML") {
+            return `#F26457`
+        } else if (quiz[0].name == "CSS"){
+            return `#254bddff`
+        } else {
+            return `#ece032`
+        }
+    }
+
     return (
         <div className='mainContainer'>
-            <div style={{ width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <WelcomePage quizSelectionHandler={quizSelectionHandler} htmlQuizData={htmlQuizData} cssQuizData={cssQuizData} jsQuizData={jsQuizData} setQuizDetailBox={setQuizDetailBox} />
-                {
-                    quizDetailBox && <QuizModal>
-                        <QuizDetail setQuizDetailBox={setQuizDetailBox} quiz={quiz} />
-                    </QuizModal>
-                }
-            </div>
+            {
+                !isQuizStart ? (
+                    <div style={{ width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        <WelcomePage quizSelectionHandler={quizSelectionHandler} htmlQuizData={htmlQuizData} cssQuizData={cssQuizData} jsQuizData={jsQuizData} setQuizDetailBox={setQuizDetailBox} />
+                        {
+                            quizDetailBox && <QuizModal>
+                                <QuizDetail setQuizDetailBox={setQuizDetailBox} quiz={quiz} setIsQuizStart={setIsQuizStart} backgroundColorHandler={backgroundColorHandler} />
+                            </QuizModal>
+                        }
+                    </div>
+                ) : (
+                    <div>
+                            <QuizMain quiz={quiz} backgroundColorHandler={backgroundColorHandler} />
+                    </div>
+                )
+            }
+
         </div>
     )
 }
@@ -155,7 +175,7 @@ function WelcomePage({ quizSelectionHandler, htmlQuizData, cssQuizData, jsQuizDa
     )
 }
 
-// ---------------------------------------quiz detail modal----------------------------------------//
+// ---------------------------------------quiz modal----------------------------------------//
 
 function QuizModal({ children }) {
     return (
@@ -165,14 +185,18 @@ function QuizModal({ children }) {
     )
 }
 
-function QuizDetail({ setQuizDetailBox, quiz }) {
+// ---------------------------------------quiz detail----------------------------------------//
+
+function QuizDetail({ setQuizDetailBox, quiz, setIsQuizStart, backgroundColorHandler }) {
     return (
-        <div className='modalContainer' style={{ backgroundColor: "#F26457" }}>
+        <div className='modalContainer' style={{ backgroundColor: backgroundColorHandler(quiz) }}>
             <h1 style={{ margin: "50px 0px", fontSize: "3rem" }}>Welcome to {quiz[0].name} quiz</h1>
             <h2>Number of Questions: {quiz.length - 1}</h2>
             <h2>Passing percentage: 70%</h2>
             <div style={{ width: "80%", display: "flex", justifyContent: "space-around", margin: "30px 0px", padding: "10px" }}>
-                <button className='btns'>Start Quiz</button>
+                <button className='btns' onClick={() => {
+                    setIsQuizStart(true)
+                }}>Start Quiz</button>
                 <button className='btns' onClick={() => {
                     setQuizDetailBox(false)
                 }}>Back</button>
@@ -180,5 +204,35 @@ function QuizDetail({ setQuizDetailBox, quiz }) {
         </div>
     )
 }
+
+// ---------------------------------------quiz start----------------------------------------//
+
+function QuizMain({ quiz, backgroundColorHandler }) {
+    // console.log(quiz, "==> from main quiz component");
+    const [index, setIndex] = useState(1)
+    const quizLength = quiz.length - 1
+    console.log(quizLength);
+
+    function incrementHandler() {
+        if (index < quizLength) {
+            setIndex((i) => i + 1)
+        }
+    }
+
+    return (
+        <div style={{ width: "100vw", border: "1px solid red", minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <div className='quizContainer' style={{ backgroundColor: backgroundColorHandler(quiz) }}>
+                <div>
+                    <h1 style={{ textAlign: "center" }}>{quiz[0].name} Quiz 1</h1>
+                </div>
+                <div>
+                    <h2>Q: {quiz[index].question}</h2>
+                    <button className='btns' onClick={() => incrementHandler()}>next</button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 
 export default QuizApp
