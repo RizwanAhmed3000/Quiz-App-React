@@ -258,7 +258,9 @@ function QuizMain({ quiz, backgroundColorHandler, setScore, setIsDone, setQuizDe
                                 {
                                     Array.from([quiz[index].option1, quiz[index].option2, quiz[index].option3], (option) => (
                                         <ul>
-                                            <li className='btns' onClick={() => {
+                                            <li className={`btns ${
+                                                answer == option ? "selected" : ''
+                                            }`} onClick={() => {
                                                 setAnswer(option)
                                             }}>
                                                 {option}
