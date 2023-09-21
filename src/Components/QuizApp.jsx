@@ -89,7 +89,7 @@ function QuizApp() {
             question: "Is javascript case-sensitive?",
             option1: "true",
             option2: "false",
-            option4: "none",
+            option3: "none",
             answer: "true",
         },
         {
@@ -103,7 +103,7 @@ function QuizApp() {
             question: "Inside which HTML element do we put the JavaScript?",
             option1: "<scripting>",
             option2: "<js>",
-            option4: "<script>",
+            option3: "<script>",
             answer: "<script>",
         },
     ]
@@ -111,37 +111,41 @@ function QuizApp() {
     const [quiz, setQuiz] = useState()
     const [quizDetailBox, setQuizDetailBox] = useState(false)
     const [isQuizStart, setIsQuizStart] = useState(false)
-    // console.log(quiz);
+    const [isDone, setIsDone] = useState(false)
+    const [score, setScore] = useState(0)
+
+    // console.log(quizLength, "==> quiz length");
 
     function quizSelectionHandler(quizData) {
         setQuiz(quizData)
     }
 
     function backgroundColorHandler(quiz) {
-        if (quiz[0].name == "HTML") {
+        if (quiz[0].name === "HTML") {
             return `#F26457`
-        } else if (quiz[0].name == "CSS"){
+        } else if (quiz[0].name === "CSS") {
             return `#254bddff`
         } else {
             return `#ece032`
         }
     }
+    console.log(score, "==> score");
 
     return (
         <div className='mainContainer'>
             {
-                !isQuizStart ? (
+                !isQuizStart || isDone ? (
                     <div style={{ width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
                         <WelcomePage quizSelectionHandler={quizSelectionHandler} htmlQuizData={htmlQuizData} cssQuizData={cssQuizData} jsQuizData={jsQuizData} setQuizDetailBox={setQuizDetailBox} />
                         {
                             quizDetailBox && <QuizModal>
-                                <QuizDetail setQuizDetailBox={setQuizDetailBox} quiz={quiz} setIsQuizStart={setIsQuizStart} backgroundColorHandler={backgroundColorHandler} />
+                                <QuizDetail setQuizDetailBox={setQuizDetailBox} quiz={quiz} setIsQuizStart={setIsQuizStart} backgroundColorHandler={backgroundColorHandler} setIsDone={setIsDone}/>
                             </QuizModal>
                         }
                     </div>
                 ) : (
                     <div>
-                            <QuizMain quiz={quiz} backgroundColorHandler={backgroundColorHandler} />
+                            <QuizMain quiz={quiz} backgroundColorHandler={backgroundColorHandler} setScore={setScore} setIsDone={setIsDone} setQuizDetailBox={setQuizDetailBox} />
                     </div>
                 )
             }
@@ -187,7 +191,7 @@ function QuizModal({ children }) {
 
 // ---------------------------------------quiz detail----------------------------------------//
 
-function QuizDetail({ setQuizDetailBox, quiz, setIsQuizStart, backgroundColorHandler }) {
+function QuizDetail({ setQuizDetailBox, quiz, setIsQuizStart, backgroundColorHandler, setIsDone }) {
     return (
         <div className='modalContainer' style={{ backgroundColor: backgroundColorHandler(quiz) }}>
             <h1 style={{ margin: "50px 0px", fontSize: "3rem" }}>Welcome to {quiz[0].name} quiz</h1>
@@ -196,6 +200,7 @@ function QuizDetail({ setQuizDetailBox, quiz, setIsQuizStart, backgroundColorHan
             <div style={{ width: "80%", display: "flex", justifyContent: "space-around", margin: "30px 0px", padding: "10px" }}>
                 <button className='btns' onClick={() => {
                     setIsQuizStart(true)
+                    setIsDone(false)
                 }}>Start Quiz</button>
                 <button className='btns' onClick={() => {
                     setQuizDetailBox(false)
@@ -207,37 +212,89 @@ function QuizDetail({ setQuizDetailBox, quiz, setIsQuizStart, backgroundColorHan
 
 // ---------------------------------------quiz start----------------------------------------//
 
-function QuizMain({ quiz, backgroundColorHandler }) {
+function QuizMain({ quiz, backgroundColorHandler, setScore, setIsDone, setQuizDetailBox }) {
     // console.log(quiz, "==> from main quiz component");
     const [index, setIndex] = useState(1)
+    const [answer, setAnswer] = useState("")
+    // const [showClass, setShowClass] = useState("")
     const quizLength = quiz.length - 1
-    console.log(quizLength);
+    console.log(quizLength, "==> quiz length");
+    console.log(index, "==> index number");
 
     function incrementHandler() {
-        if (index < quizLength) {
+        if (index <= quizLength) {
             setIndex((i) => i + 1)
         }
     }
 
+    function scoreHandler() {
+        if (!answer) {
+            return alert("Select atleast one option")
+        } else if (answer === quiz[index].answer) {
+            setScore((s) => s + 1)
+            setAnswer("")
+            incrementHandler()
+        } else {
+            setScore((s) => s)
+            setAnswer("")
+            incrementHandler()
+        }
+    }
+
+    console.log(answer, "==> answer");
+
+
     return (
-        <div style={{ width: "100vw", border: "1px solid red", minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <div style={{ width: "100vw", minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
             <div className='quizContainer' style={{ backgroundColor: backgroundColorHandler(quiz) }}>
-                <div>
-                    <h1 style={{ textAlign: "center" }}>{quiz[0].name} Quiz 1</h1>
-                </div>
-                <div>
-                    <h2>Q: {quiz[index].question}</h2>
-                    {
-                        Array.from([quiz[index].option1, quiz[index].option2, quiz[index].option3], (option)=> (
-                            <ul>
-                                <li>
-                                    {option}
-                                </li>
-                            </ul>
-                        ))
-                    }
-                    <button className='btns' onClick={() => incrementHandler()}>next</button>
-                </div>
+                {
+                    index <= quizLength ? (
+                        <>
+                            <div>
+                                <h1 style={{ textAlign: "center" }}>{quiz[0].name} Quiz 1</h1>
+                            </div>
+                            <div className='option'>
+                                <h2>Q: {quiz[index].question}</h2>
+                                {
+                                    Array.from([quiz[index].option1, quiz[index].option2, quiz[index].option3], (option) => (
+                                        <ul>
+                                            <li className='btns' onClick={() => {
+                                                setAnswer(option)
+                                            }}>
+                                                {option}
+                                            </li>
+                                        </ul>
+                                    ))
+                                }
+                            </div>
+                            <button className="btns" onClick={() => {
+                                scoreHandler()
+                            }} >next</button>
+                        </>
+                    ) : <Result setIsDone={setIsDone} setQuizDetailBox={setQuizDetailBox} setScore={setScore}/>
+                }
+            </div>
+        </div>
+    )
+}
+
+function Result({ setIsDone, setQuizDetailBox, setScore }) {
+    return (
+        <div className='resultContainer'>
+            <h1 style={{ textAlign: "center", fontSize: "50px" }}>Your result</h1>
+            <div style={{ width: "100%", textAlign: "center" }}>
+                <h2 style={{margin: "13px 0px"}}>Correct Answers: 0</h2>
+                <h2 style={{margin: "13px 0px"}}>Wrong Answers: 0</h2>
+                <h2 style={{margin: "13px 0px"}}>Status: Failed</h2>
+                <h1 style={{margin: "13px 0px"}}>Percentage: 100%</h1>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <button className='btns'>Try Again</button>
+                <button className='btns' onClick={()=> {
+                    setIsDone(true)
+                    setQuizDetailBox(false)
+                    setScore(0)
+                }}>Done</button>
             </div>
         </div>
     )
