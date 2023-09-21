@@ -139,13 +139,13 @@ function QuizApp() {
                         <WelcomePage quizSelectionHandler={quizSelectionHandler} htmlQuizData={htmlQuizData} cssQuizData={cssQuizData} jsQuizData={jsQuizData} setQuizDetailBox={setQuizDetailBox} />
                         {
                             quizDetailBox && <QuizModal>
-                                <QuizDetail setQuizDetailBox={setQuizDetailBox} quiz={quiz} setIsQuizStart={setIsQuizStart} backgroundColorHandler={backgroundColorHandler} setIsDone={setIsDone}/>
+                                <QuizDetail setQuizDetailBox={setQuizDetailBox} quiz={quiz} setIsQuizStart={setIsQuizStart} backgroundColorHandler={backgroundColorHandler} setIsDone={setIsDone} />
                             </QuizModal>
                         }
                     </div>
                 ) : (
                     <div>
-                            <QuizMain quiz={quiz} backgroundColorHandler={backgroundColorHandler} setScore={setScore} setIsDone={setIsDone} setQuizDetailBox={setQuizDetailBox} />
+                        <QuizMain quiz={quiz} backgroundColorHandler={backgroundColorHandler} setScore={setScore} setIsDone={setIsDone} setQuizDetailBox={setQuizDetailBox} score={score} />
                     </div>
                 )
             }
@@ -212,7 +212,7 @@ function QuizDetail({ setQuizDetailBox, quiz, setIsQuizStart, backgroundColorHan
 
 // ---------------------------------------quiz start----------------------------------------//
 
-function QuizMain({ quiz, backgroundColorHandler, setScore, setIsDone, setQuizDetailBox }) {
+function QuizMain({ quiz, backgroundColorHandler, setScore, setIsDone, setQuizDetailBox, score }) {
     // console.log(quiz, "==> from main quiz component");
     const [index, setIndex] = useState(1)
     const [answer, setAnswer] = useState("")
@@ -271,26 +271,42 @@ function QuizMain({ quiz, backgroundColorHandler, setScore, setIsDone, setQuizDe
                                 scoreHandler()
                             }} >next</button>
                         </>
-                    ) : <Result setIsDone={setIsDone} setQuizDetailBox={setQuizDetailBox} setScore={setScore}/>
+                    ) : <Result setIsDone={setIsDone} setQuizDetailBox={setQuizDetailBox} setScore={setScore} score={score} quizLength={quizLength} />
                 }
             </div>
         </div>
     )
 }
 
-function Result({ setIsDone, setQuizDetailBox, setScore }) {
+function Result({ setIsDone, setQuizDetailBox, setScore, score, quizLength }) {
+
+    // const [correct, setCorrect] = useState(0);
+    // const [wrong, setWrong] = useState(0);
+    const [status, setStatus] = useState("");
+    // const [percentage, setPercentage] = useState(0);
+
+    // setCorrect(score);
+    // setWrong(quizLength - score);
+
+    const correctAns = score
+    const wrongAns = quizLength - score
+    const percentage = (score / quizLength) * 100;
+
+
+
+
     return (
         <div className='resultContainer'>
             <h1 style={{ textAlign: "center", fontSize: "50px" }}>Your result</h1>
             <div style={{ width: "100%", textAlign: "center" }}>
-                <h2 style={{margin: "13px 0px"}}>Correct Answers: 0</h2>
-                <h2 style={{margin: "13px 0px"}}>Wrong Answers: 0</h2>
-                <h2 style={{margin: "13px 0px"}}>Status: Failed</h2>
-                <h1 style={{margin: "13px 0px"}}>Percentage: 100%</h1>
+                <h2 style={{ margin: "13px 0px" }}>Correct Answers: {correctAns}</h2>
+                <h2 style={{ margin: "13px 0px" }}>Wrong Answers: {wrongAns}</h2>
+                <h2 style={{ margin: "13px 0px" }}>Status: {percentage >= 70 ? "Passed" : "Failed"}</h2>
+                <h1 style={{ margin: "13px 0px" }}>Percentage: {percentage}%</h1>
             </div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <button className='btns'>Try Again</button>
-                <button className='btns' onClick={()=> {
+                <button className='btns' onClick={() => {
                     setIsDone(true)
                     setQuizDetailBox(false)
                     setScore(0)
